@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, reverse
 import datetime
 from os import listdir
+from django.core.paginator import Paginator
 
 
 def home_view(request):
@@ -34,6 +35,29 @@ def workdir_view(request):
     # по аналогии с `time_view`, напишите код,
     # который возвращает список файлов в рабочей 
     # директории
-    files_list = listdir(path=r'C:\Users\olesy\PycharmProjects\Django homework\dj-homeworks\first-project\first_project')
-    return HttpResponse(files_list)
+    # files_list = listdir(path=r'C:\Users\olesy\PycharmProjects\Django homework\dj-homeworks\first-project\first_project')
+    # return HttpResponse(files_list)
 
+    context = {
+        'files_list': listdir(path=r'C:\Users\olesy\PycharmProjects\Django homework\dj-homeworks\first-project\first_project')
+    }
+
+    return render(request, 'app/workdir.html', context)
+
+
+def summ(request, a, b):
+    result = a + b
+    return HttpResponse(f'Sum is {result}')
+
+
+CONTENT = [str(i) for i in range(10000)]
+
+
+def pagi(request):
+    page_number = int(request.GET.get('page', 1))
+    paginator = Paginator(CONTENT, 10)
+    page = paginator.get_page(page_number)
+    context = {
+        'page': page
+    }
+    return render(request, 'app/pagi.html', context)
